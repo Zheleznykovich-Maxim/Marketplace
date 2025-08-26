@@ -1,0 +1,43 @@
+spring:
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/marketplace
+    username: app
+    password: password
+    hikari:
+      maximum-pool-size: 20
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+
+kafka:
+  bootstrap-servers: kafka:9092
+  producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  consumer:
+    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    group-id: order-processor-group
+  topic:
+    order-created: order.created
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+logging:
+  level:
+    root: INFO
+    org.springframework.kafka: INFO
