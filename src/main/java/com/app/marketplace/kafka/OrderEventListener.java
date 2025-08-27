@@ -15,6 +15,6 @@ public class OrderEventListener {
 
     @KafkaListener(topics = "${kafka.topic.order-created}", groupId = "order-service")
     public void onOrderCreated(ConsumerRecord<String, String> record) {
-        log.info("Recieved order.created event: key={}, value={}", record.key(), record);
+        log.info("Recieved order.created event: key={}, value={}", record.key(), record.value());
     }
 }
