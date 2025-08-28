@@ -8,6 +8,6 @@ RUN mvn -B -DskipTests package
 # runtime
 FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
-COPY --from=builder /app/target/marketplace-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/Marketplace-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app/app.jar"]
