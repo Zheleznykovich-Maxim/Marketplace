@@ -3,13 +3,10 @@ package com.app.marketplace.service;
 import com.app.marketplace.config.KafkaProperties;
 import com.app.marketplace.domain.CustomerOrder;
 import com.app.marketplace.domain.OutboxEvent;
-import com.app.marketplace.domain.Product;
-import com.app.marketplace.exception.InsufficientStockException;
 import com.app.marketplace.exception.ProductNotfoundException;
 import com.app.marketplace.repository.OrderRepository;
 import com.app.marketplace.repository.OutboxEventRepository;
 import com.app.marketplace.repository.ProductRepository;
-import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,20 +26,13 @@ public class OrderService {
 
     @Transactional
     public CustomerOrder createOrder(Long productId, int qty) {
-        Product product = productRepository.findByIdForUpdate(productId)
+        productRepository.findByIdForUpdate(productId)
                 .orElseThrow(() -> new ProductNotfoundException(productId));
-
-        if (product.getStock() < qty) {
-            throw new InsufficientStockException(productId, qty, product.getStock());
-        }
-
-        product.setStock(product.getStock() - qty);
-        productRepository.save(product);
 
         CustomerOrder order = new CustomerOrder();
         order.setProductId(productId);
         order.setQty(qty);
-        order.setStatus("CREATED");
+        order.setStatus("PENDING");
         orderRepository.save(order);
 
         //Запись события в outbox
