@@ -3,10 +3,10 @@ import { check, sleep } from 'k6';
 
 export let options = {
     stages: [
-        { duration: '30s', target: 500 },   // разогрев до 500 виртуальных пользователей
-        { duration: '1m', target: 1000 },   // рост до 1000
-        { duration: '1m', target: 2000 },   // рост до 2000
-        { duration: '2m', target: 2000 },   // держим 2000
+        { duration: '10s', target: 1000 },   // разогрев до 500 виртуальных пользователей
+        { duration: '20s', target: 2000 },   // рост до 1000
+        { duration: '30s', target: 1000 },   // рост до 2000
+        { duration: '1m', target: 500 },   // держим 2000
         { duration: '30s', target: 0 },     // спад
     ],
     thresholds: {
@@ -18,7 +18,7 @@ export let options = {
 export default function () {
     // Теперь URL на nginx, который балансирует между 3 репликами
     const url = 'http://nginx:80/api/orders';
-    const payload = JSON.stringify({ productId: 1, qty: 1 });
+    const payload = JSON.stringify({ productId: 2, qty: 1 });
 
     const params = {
         headers: {

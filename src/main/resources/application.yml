@@ -6,7 +6,10 @@ spring:
     username: app
     password: password
     hikari:
-      maximum-pool-size: 20
+      maximum-pool-size: 30
+      minimum-idle: 10
+      idle-timeout: 30000
+      connection-timeout: 20000
   jpa:
     properties:
       hibernate:
@@ -16,17 +19,23 @@ spring:
   flyway:
     enabled: true
 
-kafka:
-  bootstrap-servers: localhost:9092
-  producer:
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.apache.kafka.common.serialization.StringSerializer
-  consumer:
-    key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-    group-id: order-processor-group
-  topic:
-    order-created: order.created
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      acks: 1
+      batch-size: 32768
+      buffer-memory: 67108864
+      compression-type: lz4
+    listener:
+      concurrency: 4
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: order-processor-group
+    topic:
+      order-created: order.created
 
 server:
   port: 8080
